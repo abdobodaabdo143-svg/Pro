@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صانع البروفايل الشخصي</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #10b981;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .panel-title i {
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .skills-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .skills-input input {
+            flex: 1;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            background: rgba(37, 99, 235, 0.2);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .skill-tag i {
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .social-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            width: 100%;
+            max-width: 400px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            margin: 0 auto 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar i {
+            font-size: 60px;
+            color: white;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .user-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--light);
+        }
+
+        .user-title {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .user-bio {
+            color: var(--gray);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .user-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .user-skill {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            background: var(--primary);
+        }
+
+        /* Actions Panel */
+        .actions-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .action-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .action-desc {
+            color: var(--gray);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-user-cog"></i> صانع البروفايل الشخصي</h1>
+            <p>أنشئ بروفايلك الشخصي بسهولة وشاركه مع العالم</p>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Editor Panel -->
+            <div class="editor-panel">
+                <div class="panel-title">
+                    <i class="fas fa-edit"></i>
+                    <h2>تخصيص البروفايل</h2>
+                </div>
+
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <input type="text" id="name" class="form-control" placeholder="أدخل اسمك" value="عبدالله أحمد">
+                </div>
+
+                <div class="form-group">
+                    <label for="title"><i class="fas fa-briefcase"></i> المسمى الوظيفي</label>
+                    <input type="text" id="title" class="form-control" placeholder="المطور | مهندس البرمجيات" value="مطور ويب | مهندس برمجيات">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio"><i class="fas fa-file-alt"></i> نبذة عنك</label>
+                    <textarea id="bio" class="form-control" rows="3" placeholder="اكتب نبذة مختصرة عنك">مطور ويب بخبرة 5+ سنوات، متخصص في تطوير تطبيقات الويب الحديثة باستخدام React وNode.js. أحب حل المشكلات المعقدة وبناء تجارب مستخدم ممتازة.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-code"></i> المهارات</label>
+                    <div class="skills-input">
+                        <input type="text" id="skillInput" class="form-control" placeholder="أضف مهارة جديدة">
+                        <button class="btn" onclick="addSkill()">
+                            <i class="fas fa-plus"></i> إضافة
+                        </button>
+                    </div>
+                    <div id="skillsList" class="skills-list">
+                        <!-- Skills will be added here -->
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-link"></i> روابط التواصل</label>
+                    <div class="social-links">
+                        <input type="text" id="github" class="form-control" placeholder="GitHub" value="https://github.com">
+                        <input type="text" id="linkedin" class="form-control" placeholder="LinkedIn" value="https://linkedin.com">
+                        <input type="text" id="twitter" class="form-control" placeholder="Twitter" value="https://twitter.com">
+                        <input type="text" id="portfolio" class="form-control" placeholder="الموقع الشخصي" value="https://example.com">
+                    </div>
+                </div>
+
+                <button class="btn btn-success" style="width: 100%; margin-top: 20px;" onclick="updateProfile()">
+                    <i class="fas fa-sync-alt"></i> تحديث البروفايل
+                </button>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="avatar" id="profileAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="user-name" id="profileName">عبدالله أحمد</h2>
+                        <div class="user-title" id="profileTitle">مطور ويب | مهندس برمجيات</div>
+                        <p class="user-bio" id="profileBio">مطور ويب بخبرة 5+ سنوات، متخصص في تطوير تطبيقات الويب الحديثة باستخدام React وNode.js. أحب حل المشكلات المعقدة وبناء تجارب مستخدم ممتازة.</p>
+                        
+                        <div class="user-skills" id="profileSkills">
+                            <!-- Skills will appear here -->
+                        </div>
+
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" id="githubLink">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="social-icon" id="linkedinLink">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="social-icon" id="twitterLink">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon" id="portfolioLink">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Panel -->
+        <div class="actions-panel">
+            <div class="panel-title">
+                <i class="fas fa-share-alt"></i>
+                <h2>مشاركة البروفايل</h2>
+            </div>
+
+            <div class="actions-grid">
+                <div class="action-card">
+                    <div class="action-title">
+                        <i class="fas fa-download"></i>
+                        <h3>حفظ كصورة</h3>
+                    </div>
+                    <p class="action-desc">احفظ بروفايلك كصورة لمشاركتها على وسائل التواصل الاجتماعي</p>
+                    <button class="btn" onclick="saveAsImage()">
+                        <i class="fas fa-image"></i> حفظ الصورة
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-title">
+                        <i class="fas fa-share"></i>
+                        <h3>مشاركة مباشرة</h3>
+                    </div>
+                    <p class="action-desc">شارك بروفايلك عبر الواتساب، تويتر، وغيرها من المنصات</p>
+                    <button class="btn" onclick="openShareModal()">
+                        <i class="fas fa-share-alt"></i> مشاركة
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-title">
+                        <i class="fas fa-link"></i>
+                        <h3>رابط مباشر</h3>
+                    </div>
+                    <p class="action-desc">احصل على رابط فريد لبروفايلك يمكنك مشاركته مع أي شخص</p>
+                    <button class="btn" onclick="generateLink()">
+                        <i class="fas fa-copy"></i> نسخ الرابط
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-title">
+                        <i class="fas fa-code"></i>
+                        <h3>كود HTML</h3>
+                    </div>
+                    <p class="action-desc">احصل على كود HTML لتضمين بروفايلك في موقعك الشخصي</p>
+                    <button class="btn" onclick="getHTMLCode()">
+                        <i class="fas fa-code"></i> نسخ الكود
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2024 صانع البروفايل الشخصي | صنع بـ ❤️ لمساعدة الجميع على عرض مهاراتهم</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                مجاني تمامًا | لا يتطلب تسجيل | محلي 100%
+            </p>
+        </footer>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-share-alt"></i> مشاركة البروفايل</h2>
+                <button class="close-modal" onclick="closeShareModal()">&times;</button>
+            </div>
+            <div class="share-options">
+                <a href="#" class="share-btn" id="whatsappShare">
+                    <i class="fab fa-whatsapp"></i> واتساب
+                </a>
+                <a href="#" class="share-btn" id="twitterShare">
+                    <i class="fab fa-twitter"></i> تويتر
+                </a>
+                <a href="#" class="share-btn" id="facebookShare">
+                    <i class="fab fa-facebook"></i> فيسبوك
+                </a>
+                <a href="#" class="share-btn" id="linkedinShare">
+                    <i class="fab fa-linkedin"></i> لينكدإن
+                </a>
+                <a href="#" class="share-btn" id="telegramShare">
+                    <i class="fab fa-telegram"></i> تيليجرام
+                </a>
+                <a href="#" class="share-btn" id="emailShare">
+                    <i class="fas fa-envelope"></i> بريد إلكتروني
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // المهارات الافتراضية
+        let skills = ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'Python'];
+
+        // تهيئة المهارات
+        function initSkills() {
+            const skillsList = document.getElementById('skillsList');
+            skillsList.innerHTML = '';
+            skills.forEach(skill => {
+                const skillTag = document.createElement('div');
+                skillTag.className = 'skill-tag';
+                skillTag.innerHTML = `
+                    ${skill}
+                    <i class="fas fa-times" onclick="removeSkill('${skill}')"></i>
+                `;
+                skillsList.appendChild(skillTag);
+            });
+            updateProfileSkills();
+        }
+
+        // إضافة مهارة
+        function addSkill() {
+            const skillInput = document.getElementById('skillInput');
+            const skill = skillInput.value.trim();
+            
+            if (skill && !skills.includes(skill)) {
+                skills.push(skill);
+                skillInput.value = '';
+                initSkills();
+            }
+        }
+
+        // حذف مهارة
+        function removeSkill(skillToRemove) {
+            skills = skills.filter(skill => skill !== skillToRemove);
+            initSkills();
+        }
+
+        // تحديث البروفايل
+        function updateProfile() {
+            // تحديث البيانات الأساسية
+            document.getElementById('profileName').textContent = document.getElementById('name').value;
+            document.getElementById('profileTitle').textContent = document.getElementById('title').value;
+            document.getElementById('profileBio').textContent = document.getElementById('bio').value;
+
+            // تحديث روابط التواصل
+            document.getElementById('githubLink').href = document.getElementById('github').value;
+            document.getElementById('linkedinLink').href = document.getElementById('linkedin').value;
+            document.getElementById('twitterLink').href = document.getElementById('twitter').value;
+            document.getElementById('portfolioLink').href = document.getElementById('portfolio').value;
+
+            // تحديث المهارات
+            updateProfileSkills();
+
+            // إشعار
+            showNotification('تم تحديث البروفايل بنجاح!');
+        }
+
+        // تحديث المهارات في العرض
+        function updateProfileSkills() {
+            const profileSkills = document.getElementById('profileSkills');
+            profileSkills.innerHTML = '';
+            
+            skills.forEach(skill => {
+                const skillElement = document.createElement('span');
+                skillElement.className = 'user-skill';
+                skillElement.textContent = skill;
+                profileSkills.appendChild(skillElement);
+            });
+        }
+
+        // حفظ كصورة
+        function saveAsImage() {
+            showNotification('جاري حفظ البروفايل كصورة...');
+            // في الواقع، يمكن استخدام مكتبة مثل html2canvas لهذا الغرض
+        }
+
+        // فتح نافذة المشاركة
+        function openShareModal() {
+            const modal = document.getElementById('shareModal');
+            modal.style.display = 'flex';
+            
+            // إعداد روابط المشاركة
+            const profileData = {
+                name: document.getElementById('name').value,
+                title: document.getElementById('title').value,
+                bio: document.getElementById('bio').value.substring(0, 100) + '...'
+            };
+            
+            const text = `تعرف على ${profileData.name} - ${profileData.title}: ${profileData.bio}`;
+            const url = window.location.href;
+            
+            document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+            document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            document.getElementById('linkedinShare').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(profileData.name)}&summary=${encodeURIComponent(profileData.bio)}`;
+            document.getElementById('telegramShare').href = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+            document.getElementById('emailShare').href = `mailto:?subject=${encodeURIComponent('بروفايل ' + profileData.name)}&body=${encodeURIComponent(text + '\n\n' + url)}`;
+        }
+
+        // إغلاق نافذة المشاركة
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        // توليد رابط
+        function generateLink() {
+            const profileData = {
+                name: document.getElementById('name').value,
+                title: document.getElementById('title').value,
+                bio: document.getElementById('bio').value,
+                skills: skills,
+                links: {
+                    github: document.getElementById('github').value,
+                    linkedin: document.getElementById('linkedin').value,
+                    twitter: document.getElementById('twitter').value,
+                    portfolio: document.getElementById('portfolio').value
+                }
+            };
+            
+            // في تطبيق حقيقي، يمكن حفظ البيانات على سيرفر وإرجاع رابط
+            const dataStr = JSON.stringify(profileData);
+            const base64 = btoa(dataStr);
+            const link = `${window.location.origin}${window.location.pathname}?profile=${base64}`;
+            
+            navigator.clipboard.writeText(link).then(() => {
+                showNotification('تم نسخ الرابط إلى الحافظة!');
+            });
+        }
+
+        // الحصول على كود HTML
+        function getHTMLCode() {
+            const profileCard = document.querySelector('.profile-card').outerHTML;
+            navigator.clipboard.writeText(profileCard).then(() => {
+                showNotification('تم نسخ كود HTML إلى الحافظة!');
+            });
+        }
+
+        // عرض إشعار
+        function showNotification(message) {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--success);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i> ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // إزالة الإشعار بعد 3 ثواني
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+            
+            // إضافة أنيميشن
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(-50%) translateY(0); opacity: 1; }
+                    to { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // تحميل بيانات من الرابط إذا وجدت
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const profileData = urlParams.get('profile');
+            
+            if (profileData) {
+                try {
+                    const data = JSON.parse(atob(profileData));
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('title').value = data.title;
+                    document.getElementById('bio').value = data.bio;
+                    skills = data.skills || skills;
+                    document.getElementById('github').value = data.links.github;
+                    document.getElementById('linkedin').value = data.links.linkedin;
+                    document.getElementById('twitter').value = data.links.twitter;
+                    document.getElementById('portfolio').value = data.links.portfolio;
+                    
+                    updateProfile();
+                } catch (e) {
+                    console.log('لا يمكن تحميل البيانات من الرابط');
+                }
+            }
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initSkills();
+            updateProfile();
+            loadFromURL();
+            
+            // إضافة صورة إذا كانت متاحة
+            const avatar = document.getElementById('profileAvatar');
+            const img = new Image();
+            img.src = 'profile.jpg';
+            img.onload = function() {
+                avatar.innerHTML = '';
+                avatar.appendChild(img);
+            };
+            img.onerror = function() {
+                // إذا لم توجد صورة، نستخدم الأيقونة
+                avatar.innerHTML = '<i class="fas fa-user"></i>';
+            };
+        });
+
+        // إغلاق المودال عند النقر خارجها
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target === modal) {
+                closeShareModal();
+            }
+        };
+    </script>
+</body>
+</html>
